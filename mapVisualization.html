@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Karla" rel='stylesheet' type='text/css'>
+    <style>
+        body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+        svg { width:100%;height:100% ; }
+
+        path {fill:none;}
+        .graticule {
+            fill: none;
+            stroke: #777;
+            stroke-width: .5px;
+            stroke-opacity: .5;
+        }
+        .stroke {
+            fill: none;
+            stroke: #000;
+            stroke-width: 3px;
+        }
+        text {
+            font-family: 'Georgia, serif' ;
+            font-weight : normal;
+            font-size: 10px;
+        }
+        table {
+            border-collapse: collapse;
+            border: 2px black solid;
+            font: 12px sans-serif;
+        }
+
+        td, th {
+            border: 1px black solid;
+            padding: 5px;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+<script>
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var graticule = d3.geoGraticule();
+
+    var projection = d3.geoKavrayskiy7()  //Type of map
+        .scale(150) //Size
+        .translate([width / 2, height / 2])
+        .precision(.1)
+        .rotate([0,0]);
+    var path = d3.geoPath().projection(projection);
+
+
+    var svg = d3.select("body")
+        // Make it responsive to resizing
+        .append("svg").attr('width', width)
+        .attr('height', height)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 "+width+" " +height)
+        .classed("svg-content-responsive", true);
+
+
+    const g = svg.append('g');
+
+
+    //Displays the outer frame
+    g.append("defs").append("path")
+        .datum({type: "Sphere"})
+        .attr("id", "sphere")
+        .attr("d", path);
+
+    g.append("use")
+        .attr("class", "stroke")
+        .attr("xlink:href", "#sphere");
+
+    g.append("path")
+        .datum(graticule)
+        .attr("class", "graticule")
+        .attr("d", path);
+
+
+    // Up until here it was setting up the map
+    var data = "https://piwodlaiwo.github.io/topojson//world-continents.json";
+
+    d3.json(data, function(error, topology) {
+        d3.csv("dinosaurDataset.csv", function (data) {
+
+            //Continents returns a dict of continent name with all the available positions
+            var continents = topojson.feature(topology, topology.objects.continent).features;
+            var centered;
+            var centroids = continents.map(function (d) {
+                return projection(d3.geoCentroid(d))
+            });
+
+            g.selectAll(".continent")
+                .data(continents)
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("title", function (d) {
+                    return d.properties.continent;
+                })
+                .style("fill", function (d, i) {
+                    return color(i);
+                })
+                .on("click", clicked);
+
+            let continentsList = [];
+            let continentsInfo = {};
+            continents.forEach(continent=>{
+                continentsList.push(continent.properties.continent)
+                continentsInfo[continent.properties.continent] = continent
+            });
+
+
+            let continentsCentroids = {};
+            continentsList.forEach((continent,i)=>{
+                continentsCentroids[continent] = centroids[i]
+            });
+
+
+
+            // Set the dinosaur data
+            let dinosaurData = [];
+            let continentDinosaurs = {};
+            data.forEach(row => {
+                row.Continent.split(",").map(item => item.trim()).forEach(continent=>{
+                    let name = row.Name;
+                    let dinoId = continent.split(" ").join("")+row.Case;
+                    let image = 'images/'+row.Name+'.png';
+                    let continentInfo = continentsInfo[continent];
+                    if (!continentDinosaurs[continent]) continentDinosaurs[continent] = [dinoId];
+                    else  continentDinosaurs[continent].push(dinoId);
+                    dinosaurData.push({name, dinoId, image, continentInfo})
+                })
+            });
+
+            // Set the positions
+            var dinosaurPositions = {};
+            Object.keys(continentDinosaurs).forEach(function(key) {
+                var center = continentsCentroids[key];
+                var dinosaursCount = continentDinosaurs[key].length;
+                var anglePartition = 360/dinosaursCount;
+                var angle = 0;
+                continentDinosaurs[key].forEach(dinosaurCase =>{
+                    var random;
+                    switch (key) {
+                        case "Africa":
+                            random = 10;
+                            break;
+                        case "North America":
+                            random = Math.random() * (50 - 10) + 10;
+                            break;
+                        case "Oceania":
+                            random = 1;
+                            break;
+                        case "Europe":
+                            random = 12;
+                            break;
+                        case "Asia":
+                            random = Math.random() * (30 - 10) + 10
+                            break;
+                        default:
+                            break;
+                    }
+
+                    dinosaurPositions[dinosaurCase] = [(center[0] + random*Math.cos(angle*(Math.PI/180))), (center[1]+random*Math.sin(angle*(Math.PI/180)))]
+                    angle += anglePartition
+                })
+            });
+
+            // Merge positions with data
+            dinosaurData.forEach(row=>{
+                var position = dinosaurPositions[row.dinoId]
+                row["position"] = position
+            });
+
+            // Function from https://bl.ocks.org/mbostock/2206590
+            function clicked(d,dinosaurZoom=false) {
+                var x, y, k;
+
+                if ((d && centered !== d) || dinosaurZoom===true) {
+                    var centroid = path.centroid(d);
+                    x = centroid[0];
+                    y = centroid[1];
+                    k = 4;
+                    centered = d;
+                } else {
+                    x = width / 2;
+                    y = height / 2;
+                    k = 1;
+                    centered = null;
+                }
+                g.selectAll("path")
+                    .classed("active", centered && function(d) { return d === centered; });
+
+                g.transition()
+                    .duration(1000)
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                    .style("stroke-width", 1.5 / k + "px");
+            }
+
+            // Adding dinosaurs, setting on click and table
+            var isDinosaurExpanded = false;
+            var expandedDinosaur;
+            var marks = g.selectAll(".mark")
+                .data(dinosaurData)
+                .enter()
+                .append("svg:image")
+                .attr('class', 'mark')
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr("id", function(d){
+                    return ""+d.dinoId;
+                })
+                .attr("x", function (d) {
+                    return d.position[0]
+                })
+                .attr("y", function (d) {
+                    return d.position[1]
+                })
+                .attr('xlink:href', function(d){ return d.image})
+                .on("click", function(d){
+                    if(expandedDinosaur !== d.name && isDinosaurExpanded){
+                        alert("A dinosaur is already selected.")
+                    }else{
+                        d3.selectAll('table').style("visibility", "hidden");
+                        marks.transition().duration(1000).attr("width", 20)
+                            .attr("height", 20);
+                        console.log(d)
+                        var chosenMark = d3.select("#"+d.dinoId);
+                        g.transition().duration(1000).attr("transform", "translate(0,0) scale(1)");
+                        doTransition(chosenMark, isDinosaurExpanded, d);
+                        addTable(isDinosaurExpanded, d)
+                        isDinosaurExpanded = !isDinosaurExpanded;
+                        expandedDinosaur = d.name
+                    }
+                });
+
+            function doTransition(chosenMark, isDinosaurExpanded, data){
+                switch(isDinosaurExpanded){
+                    case true:
+                        chosenMark.transition()
+                            .duration(1000)
+                            .attr("width", 20)
+                            .attr("height", 20)
+                            .attr("x",data.position[0])
+                            .attr("y", data.position[1])
+                        break;
+                    case false:
+                        chosenMark.transition()
+                            .duration(1000)
+                            .attr("width", 200)
+                            .attr("height", 200)
+                            .attr("x",0)
+                            .attr("y", 50)
+                    default:
+                        break;
+                }
+            }
+
+            function addTable(isDinosaurExpanded, d){
+                var columns = ["Name","Diet","Group","Hip Type","Length","Height","Weight ","Continent","Gelogical period","Millions of Years Ago when the Dinosaur Lived"]
+                var tableData = data.filter(function(e){
+                    if(d.name === e.Name){
+                        return e;
+                    }
+                });
+                var table = g.append("foreignObject")
+                    .attr("width", width)
+                    .attr("height", 90)
+                    .attr("preserveAspectRatio", "xMinYMin meet")
+                    .attr("viewBox","0 0 "+width+" "+ 90)
+                    .append("xhtml:body")
+                    .append('table');
+                var thead = table.append('thead');
+                var tbody = table.append('tbody');
+
+                thead.append('tr')
+                    .selectAll('th')
+                    .data(columns)
+                    .enter()
+                    .append('th')
+                    .text(function (d) { return d });
+
+                var rows = tbody.selectAll('tr')
+                    .data(tableData)
+                    .enter()
+                    .append('tr');
+
+                rows.selectAll('td')
+                    .data(function(row) {
+                        return columns.map(function (column) {
+                            return { column: column, value: row[column] }
+                        })
+                    })
+                    .enter()
+                    .append('td')
+                    .text(function (d) {
+                        return d.value
+                    });
+
+                if(isDinosaurExpanded){
+                    clicked(d.continentInfo, true)
+                    table.style("visibility", "hidden");
+                }
+                else{
+                    table.style("visibility", "visible");
+                }
+            }
+        })
+
+    });
+
+
+</script>
+</body>

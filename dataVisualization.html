@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <style>
+        .d3-tip {
+        line-height: 1;
+        padding: 6px;
+        background: whitesmoke;
+        box-shadow: 0px 0px 47px -1px rgba(0,0,0,0.33);
+        border-radius: 15px 15px 15px 15px;
+        font-size: 12px;
+        }
+    </style>
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+    <!-- Create a div where the graph will take place -->
+
+</head>
+<body>
+<script type="text/javascript">
+
+    var margin = {top: 30, right: 30, bottom: 70, left: 60},
+        width = window.innerWidth - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("id", "svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+
+
+    var g = svg.append("g").attr("id","g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.csv("dinosaurDataset.csv", function(data) {
+        svg.append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", svg.attr("height"));
+
+        // X axis domain and range
+        var x = d3.scaleBand()
+            .rangeRound([0, width])
+            .domain(data.map(function(d) { return d.Name; }))
+            .padding(1);
+
+        // Y axis domain and range
+        var y = d3.scaleLinear()
+            .domain([0,9])
+            .rangeRound([height, 0]);
+
+        // Pan and zoom
+        var zoom = d3.zoom()
+            .scaleExtent([1, Infinity])
+            .translateExtent([[0, 0], [width+90, height+100]])
+            .on("zoom", zoomed)
+            .on("start", zoomstart)
+            .on("end", zoomend);
+
+
+        var mousePos = null;
+        function zoomstart(){
+            mousePos = d3.mouse(this);
+        }
+
+        function zoomend(){
+            var m = d3.mouse(this);
+            if (mousePos[0] ===  m[0] && mousePos[1] === m[1]){
+                tool_tip.hide()
+            }
+        }
+
+        var tool_tip = d3.tip()
+            .attr("class", "d3-tip")
+            .offset([-20, 120])
+            .html("<p style=\"font-size:20px;\" align=\"center\"><b>Size comparison:</b></p><div id='tipDiv'></div>");
+
+        g.call(tool_tip)
+
+        // Add images
+        var images = g.append("g")
+            // Prevents images from going out of graph
+            .style('clip-path', 'url(#clip)')
+            .selectAll("images")
+            .data(data)
+            .enter()
+            .append("image")
+            .attr('xlink:href', function(d){ return 'images/'+d.Name+'.png'})
+            .attr('alignment-baseline',"baseline")
+            .attr("width", function(d){return height-y(d.Height)})
+            .attr("height", function(d){return height-y(d.Height)})
+            .attr("id", function(d){
+                return d.Name;
+            })
+            .attr("x", function (d) { return x(d.Name)-(height-y(d.Height))/2; })
+            .attr("y", function (d) { return y(d.Height); })
+            .attr("preserveAspectRatio", "none")
+            .on("mousedown", function(d){
+                tool_tip.show();
+
+                var margin = {top: 10, right: 10, bottom: 45, left: 20},
+                    width = 200 - margin.left - margin.right,
+                    height = 200 - margin.top - margin.bottom
+                // SVG with rectangle and text
+                var tipSVG = d3.select("#tipDiv")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+                data = [
+                    { height: "1.7", width: "0.8", href : 'images/human.png', name : "human", x: 10 },
+                    { height: d.Height, width: d.Height, href: 'images/'+d.Name+'.png', name : "dinosaur", x:40}
+                ];
+
+                // X axis
+                var x = d3.scaleBand()
+                    .range([ 0, width ])
+                    // .domain(data.map(function(d) { return d.name; }))
+                    .padding(0.2);
+
+                tipSVG.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x))
+                    .selectAll("text")
+                    .attr("transform", "translate(-10,0)rotate(-45)")
+                    .style("text-anchor", "end");
+
+                // Add Y axis
+                var y = d3.scaleLinear()
+                    .domain([0, 9])
+                    .range([ height, 0]);
+                tipSVG.append("g")
+                    .call(d3.axisLeft(y));
+
+                // Images
+                tipSVG.selectAll("images")
+                    .data(data)
+                    .enter()
+                    .append("image")
+                    .attr('xlink:href', function(d){ return d.href})
+                    .attr('alignment-baseline',"baseline")
+                    .attr("preserveAspectRatio", "none")
+                    .attr("x", function(d) {return  d.x; })
+                    .attr("y", function(d) {return y(d.height); })
+                    .attr("width", function(d){height-y(d.width)})
+                    .attr("height", function(d) { return height - y(d.height); })
+            }).on("mouseover", function(d){
+                var selectedDinosaur  = d3.select('#'+d.Name)
+                images.style("opacity", 0.2);
+                selectedDinosaur.style("opacity", 1);
+            });
+
+        g.append("g")
+            .style('clip-path', 'url(#clip)')
+            .append("g")
+            .attr("class", "axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+        g.append("g")
+            .attr("class", "axis--y")
+            .call(d3.axisLeft(y).ticks(null));
+        g.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1.5em")
+        .style("text-anchor", "middle")
+        .text("Height (meters)")
+        .attr("font-weight", "bold");
+
+        svg.call(zoom);
+
+        function zoomed() {
+            x.range([0, width].map(d => d3.event.transform.applyX(d)));
+            images.attr("x", function (d) { return x(d.Name)-(height-y(d.Height))/2; }).attr("width",function(d){return height-y(d.Height)});
+
+            g.select(".axis--x").call(d3.axisBottom(x));
+        }
+    })
+
+
+</script>
+</body>
+</html>
