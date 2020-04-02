@@ -13,13 +13,21 @@
         font-size: 12px;
         }
     </style>
-    <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
-    <!-- Create a div where the graph will take place -->
+    <link rel="stylesheet" type="text/css" href="index.css">
 
 </head>
 <body>
+<div id="visualizationTitle">
+    <h1><b>GRAPH VISUALIZATION</b></h1>
+    <div>
+        <a href = "index.html" id="backLink">
+            <h3 id="back_text">back</h3>
+            <img src="images/undo.png" alt="undo" id="undo">
+        </a>
+    </div>
+</div>
 <script type="text/javascript">
 
     var margin = {top: 30, right: 30, bottom: 70, left: 60},
@@ -76,7 +84,10 @@
 
         var tool_tip = d3.tip()
             .attr("class", "d3-tip")
-            .offset([-20, 120])
+            .direction("e")
+            .offset(function() {
+                return [-parseInt(event.target.y.baseVal.value), 0]
+            })
             .html("<p style=\"font-size:20px;\" align=\"center\"><b>Size comparison:</b></p><div id='tipDiv'></div>");
 
         g.call(tool_tip)
@@ -187,8 +198,9 @@
             g.select(".axis--x").call(d3.axisBottom(x));
         }
     })
-
-
 </script>
+
+<
+
 </body>
 </html>

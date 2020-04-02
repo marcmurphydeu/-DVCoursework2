@@ -1,0 +1,124 @@
+
+main {
+    flex: 1 0 auto; /* allows the content to grow but not shrink */
+}
+
+iframe {
+    display: block;       /* iframes are inline by default */
+    background: white;
+    border: none;         /* Reset default border */
+    height: 80vh;        /* Viewport-relative units */
+    width: 80vw;
+    margin-left: 100px;
+    overflow:hidden;
+}
+#hr {
+    background-color: orange;
+    border: none;
+    margin-top: 50px;
+    width: 30%;
+}
+
+.carousel{
+    overflow: hidden;
+}
+.container{
+    overflow: hidden;
+}
+
+.carousel-inner{
+    overflow: hidden;
+}
+.item{
+    overflow: hidden;
+}
+
+
+#undo{
+    width: 20px;
+    height: 20px;
+}
+#visualizationTitle{
+    display: flex;
+    flex-direction: row;
+}
+
+#backLink{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 100px;
+}
+#back_text{
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+a:link {
+    color: black;
+    background-color: transparent;
+}
+
+a:visited {
+    color: black;
+    background-color: transparent;
+}
+
+a:hover {
+    color: brown;
+    background-color: transparent;
+}
+
+h1{
+    margin-left: 100px;
+}
+
+#introduction{
+    margin-left: 100px;
+}
+
+#summary{
+    margin-left: 100px;
+}
+#conclusion{
+    margin-left: 100px;
+}
+#literature{
+    margin-left: 100px;
+}
+
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+img {
+    /*background: whitesmoke;*/
+    box-shadow: 0px 0px 47px -26px rgba(0,0,0,0.75);
+    border-radius: 15px 15px 15px 15px;
+}
+
+.column {
+    display: flex;
+    padding-top: 20px;
+}
+
+#map{
+    margin-left: 20px;
+}
+#graph{
+    margin-right: 20px;
+}
+
+h1 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+h2 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+h3 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
+h4 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+p { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; margin-right: 100px;}
+blockquote { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
+pre { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+div { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }

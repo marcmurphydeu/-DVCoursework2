@@ -4,7 +4,7 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Karla" rel='stylesheet' type='text/css'>
     <style>
         body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
@@ -46,9 +46,21 @@
 </head>
 
 <body>
+<div id="visualizationTitle">
+    <h1><b>MAP VISUALIZATION</b></h1>
+    <div>
+        <a href = "index.html" id="backLink">
+            <h3 id="back_text">back</h3>
+            <img src="images/undo.png" alt="undo" id="undo">
+        </a>
+    </div>
+</div>
+
 <script>
-    var width = window.innerWidth;
-    var height = window.innerHeight;
+    var margin = {top: 30, right: 30, bottom: 70, left: 60},
+        width = window.innerWidth - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
+
 
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -56,7 +68,7 @@
 
     var projection = d3.geoKavrayskiy7()  //Type of map
         .scale(150) //Size
-        .translate([width / 2, height / 2])
+        .translate([(width + margin.left + margin.right) / 2,  (height + margin.top + margin.bottom) / 2])
         .precision(.1)
         .rotate([0,0]);
     var path = d3.geoPath().projection(projection);
@@ -64,10 +76,11 @@
 
     var svg = d3.select("body")
         // Make it responsive to resizing
-        .append("svg").attr('width', width)
-        .attr('height', height)
+        .append("svg")
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 "+width+" " +height)
+        .attr("viewBox", "0 0 "+(width + margin.left + margin.right)+" " +(height + margin.top + margin.bottom))
         .classed("svg-content-responsive", true);
 
 
@@ -238,7 +251,6 @@
                         d3.selectAll('table').style("visibility", "hidden");
                         marks.transition().duration(1000).attr("width", 20)
                             .attr("height", 20);
-                        console.log(d)
                         var chosenMark = d3.select("#"+d.dinoId);
                         g.transition().duration(1000).attr("transform", "translate(0,0) scale(1)");
                         doTransition(chosenMark, isDinosaurExpanded, d);
@@ -263,7 +275,7 @@
                             .duration(1000)
                             .attr("width", 200)
                             .attr("height", 200)
-                            .attr("x",0)
+                            .attr("x",100)
                             .attr("y", 50)
                     default:
                         break;
@@ -280,8 +292,9 @@
                 var table = g.append("foreignObject")
                     .attr("width", width)
                     .attr("height", 90)
+                    .attr("x", 100)
                     .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox","0 0 "+width+" "+ 90)
+                    .attr("viewBox","0 0 "+width+" "+ height)
                     .append("xhtml:body")
                     .append('table');
                 var thead = table.append('thead');
