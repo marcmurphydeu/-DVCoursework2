@@ -15,6 +15,7 @@ iframe {
 #hr {
     background-color: orange;
     border: none;
+    border: none;
     margin-top: 50px;
     width: 30%;
 }
@@ -69,6 +70,14 @@ a:hover {
     background-color: transparent;
 }
 
+#myInfo{
+    margin-left: 100px;
+    margin-bottom: 60px;
+}
+#myCarousel{
+    overflow: hidden;
+}
+
 h1{
     margin-left: 100px;
 }
@@ -97,7 +106,6 @@ h1{
 }
 
 img {
-    /*background: whitesmoke;*/
     box-shadow: 0px 0px 47px -26px rgba(0,0,0,0.75);
     border-radius: 15px 15px 15px 15px;
 }
@@ -115,7 +123,7 @@ img {
 }
 
 h1 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
-h2 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+h2 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 20px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
 h3 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
 h4 { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
 p { font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; margin-right: 100px;}

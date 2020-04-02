@@ -17,6 +17,12 @@
         <hr align="left" size="5" id="hr"/>
         <b>DATA VISUALIZATION COURSEWORK 2  </b>
     </h1>
+    <div id="myInfo">
+        <h3>Author: Marc Murphy Deu</h3>
+        <h3>Student number: 1732736</h3>
+        <h3><a href="https://youtu.be/9umVYJISPB8">Video</a> </h3>
+    </div>
+
     <div id="introduction">
         <h2>INTRODUCTION</h2>
         <div>
@@ -35,8 +41,8 @@
                 This shows a map of the world with the corresponding continent of each dinosaur.
             </p>
             <p>
-                The questions these two visualizations answer are simple. It allows a user to observe how
-                different in size these creatures actually were through a side by side analysis. The second one
+                The aims of these two visualizations are simple. First of all, the website allows users to observe how
+                different in size these creatures actually were through a side by side analysis. Then, it
                 provides a clear understanding of where each dinosaur was situated on the world continents.
             </p>
             <br>
@@ -54,8 +60,8 @@
                     average human.
                     <div><b>MAP</b></div>
                     <p>
-                    Instead of zooming in, the map allows for clicking on the desired continent or dinosaur,
-                    automatically focusing on the element. When a dinosaur is selected, the map zooms out
+                    Instead of zooming in, the map allows users to click on the desired continent or dinosaur,
+                    automatically focusing on the element. When a dinosaur is selected, the map zooms out,
                     revealing a table containing the extincted animal's main features. Moreover, the chosen
                     extinct animal is expanded and presented below its information. Next, if the dinosaur is pressed again,
                     both zoom and dinosaur return to their previous position.
@@ -101,14 +107,14 @@
                     because it gives a different perspective, which the user is more familiar with.
                 </p>
                 <p>
-                    Interestingly, the graph illustrates how unexpectedly huge some dinosaurs are. Similarly, other the dinosaurs
+                    Interestingly, the graph illustrates how unexpectedly huge some dinosaurs are. Similarly, other dinosaurs
                     are significantly smaller than average. For example, Tyrannosaurus rex are famous for their size and
                     aggressive character. One can observe from the graph that their height is slightly above 5 meters. On the other hand,
-                    an Allosaurus, which is not as well known, also appears as mighty as the T-rex, measuring 5 meters precisely. Moreover,
-                    those familiar with Jurassic Park, will remember the scene where a young girl feeds a small dinosaur, a Compsognathus,
-                    whose minuscule size compared to humans is manifested when it is selected. In fact, the majority of dinosaurs presented
-                    in the graph appear in the famous Steven Spielgerg movie. Essentially, this graph can even be used to prove the validity
-                    of how these species are presented in the movie. As expected, the similarities are uncanny.
+                    an Allosaurus, which is not as well known, also appears as mighty as the T-rex, measuring 5 meters precisely. Actually,
+                    those familiar with Jurassic Park will remember the scene where a young girl feeds a small dinosaur, a Compsognathus,
+                    whose minuscule size compared to humans is manifested when it is selected. In fact, the majority of dinosaurs
+                    in the graph appear in the famous Steven Spielgerg movie. Essentially, this graph can even be used to prove the validity and reliability
+                    of their representation in the movie. As expected, the similarities are uncanny.
                 </p>
                 <p>
                     However, for obtaining a rich graph using images, there are limitations. This project sets the image sizes
@@ -132,12 +138,12 @@
                 </p>
                 <p>
                     From the map, there are several distinctive observations. Firstly, there are no dinosaurs in South America considering
-                    that there are none in the dataset. Secondly, the majority are found in North America, compared to South Africa which
+                    that there are none in the dataset. Secondly, the majority are found in North America, compared to Africa which
                     only displays two and Australia only contains one. Finally and most importantly, each species is not bound to only
-                    one continent. For example, Iguanodons are found in North America, South Africa, Europe and Asia. On the other hand,
+                    one continent. For example, Iguanodons are found in North America, Africa, Europe and Asia. On the other hand,
                     other than Iguanodons, all dinosaurs in Asia are not found anywhere else. It is worth noting how the greater number of
                     dinosaurs in North America are also unique. Those which are not, are typically found across more than one continent. For
-                    instance, Allosauruses are not only found in North America, but also in South Africa and Australia.
+                    instance, Allosauruses are not only found in North America, but also in Africa and Australia.
                 </p>
                 <p>
                     As observed, when a dinosaur is selected, a table appears containing its main features. Consequently, it can be observed
@@ -151,7 +157,7 @@
                     dinosaur is placed on the water (note how the dinosaurs are placed differently on each page refresh). This is due to
                     the positioning of the centroid (computed by d3 geoCentroid's function) being closer to the coast, and the dinosaurs
                     being placed withing a certain limit of the centre. For a dataset with hundreds of dinosaurs, the Map would quickly
-                    become unintelligible with too much information, preventing a effective user experience.
+                    become unintelligible with too much information, preventing the user from having a pleasant experience.
                 </p>
             </div>
 
@@ -169,8 +175,8 @@
             a dynamic x-axis. All this, without losing quality in the images.
         </p>
         <p>
-            For the Map, displaying the dinosaurs in a non-clustered manner resulted in a numerous erroneous attempts. Randomly placing
-            them was the main alternative, but failed to prevent dinosaurs overlapping. Thus, only the top dinosaur would be selected.
+            For the Map, displaying the dinosaurs in a non-clustered manner resulted in numerous erroneous attempts. Randomly placing
+            them was the main alternative, but failed to prevent dinosaurs from overlapping. Thus, only the top dinosaur would be selected.
             The final decision involves placing them in a circular radius form the center. However, by simply placing them in a circle,
             it does not seem natural. Hence, a distance threshold was applied on top of this.
         </p>
@@ -186,7 +192,7 @@
             This leads to a potential misinterpretation of the visualizations. For instance, assuming there were never any dinosaurs in
             South America, which is not the case. Put simply, if the dataset was extended, the visualizations would prove to be more
             accurate. On the contrary, different graphs would be created because, as mentioned previously, too many dinosaurs would defeat the
-            purpose of displaying them in a clear and intuitive style.
+            purpose of being displayed in a clear and intuitive style.
         </p>
         <p>
             Finally, future work could include extensions to the current visualizations. In this way, the graph could potentially include
@@ -204,16 +210,25 @@
         <p>
             For the development of this project, knowledge on creating dynamic graphs and map visualizations were obtained. Still, some inspiration
             was needed in order to satisfy the original aims. For the scroll feature in the graph, the displaying of continents in the map and click-to-zoom
-            functionality, three projects helped their completion:
+            functionality, three crucial projects helped with their completion:
             <ul>
                 <li>
+                    Inspiration for changing the manual zoom in the map to a click.
                     <a href ="https://bl.ocks.org/mbostock/2206590">Click-to-zoom Via Transform</a>
                 </li>
                 <li>
+                    The only found source which uses continents in a map as the main criteria.
+                    Typically, map visualizations concern countries or subsets such as boroughs.
                     <a href="http://bl.ocks.org/piwodlaiwo/c0e10c375a7704f18b1bc813bc5eeddb">D3 World Continents</a>
                 </li>
                 <li>
+                    Since the zooming functionality was a major component for this project, many different sources inspired methods for its completion.
                     <a href="https://bl.ocks.org/mbostock/db6b4335bf1662b413e7968910104f0f">Pan & Zoom Axes</a>
+                    <a href="https://www.d3-graph-gallery.com/graph/interactivity_zoom.html">Zooming in D3</a>
+                    <a href="https://jarrettmeyer.com/2018/08/10/d3-zoom">Panning and Zooming</a>
+                    <a href="https://observablehq.com/@d3/zoomable-bar-chart">Zoomable Bar Chart</a>
+                    <a href="https://observablehq.com/@d3/zoomable-bar-chart">d-3 Zoom</a>
+
                 </li>
             </ul>
         </p>
