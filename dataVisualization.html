@@ -32,13 +32,13 @@
 
     var margin = {top: 30, right: 30, bottom: 70, left: 60},
         width = window.innerWidth - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        height = 530 - margin.top - margin.bottom;
 
     var svg = d3.select("body")
         .append("svg")
         .attr("id", "svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom +5)
 
 
     var g = svg.append("g").attr("id","g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
